@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "perilscore": {
+      "url": "https://app.perilscore.com/mcp",
+      "auth": {
+        "CLIENT_ID": "perilscore-cursor-mcp",
+        "scopes": [
+          "score:read",
+          "score:write",
+          "account:read"
+        ]
+      }
+    }
+  }
+}
