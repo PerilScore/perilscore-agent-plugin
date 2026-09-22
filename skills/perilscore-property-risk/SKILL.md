@@ -68,9 +68,12 @@ Before calling `build_underwriting_report`:
    capacity outcome. Never infer a charge from the presence of data.
 
 An explicit request such as "build the underwriting report" supplies paid
-intent for one address after the cost disclosure. For several addresses, check
-`get_account_credits`, state the maximum possible charge, and obtain batch
-approval before starting.
+intent for one address after the cost disclosure. A rejected free bulk request
+does not authorize premium work. If the user separately and explicitly requests
+a premium batch, check `get_account_credits`, state the maximum possible charge,
+obtain batch approval, and keep one stable idempotency key per row. The
+authenticated PerilScore SOV/bulk workflow is also available when report
+capacity permits.
 
 ## Workflow modes
 
@@ -106,12 +109,17 @@ Put discrepancies before the general risk summary.
 
 ### Portfolio or bulk list
 
-For free scoring, call `score_address` once per complete address and state that
-all calls were non-billable. For premium work, check credits first, obtain batch
-approval, and keep one stable idempotency key per row. Summarize address, top
-peril, Fire Protection Score band, premium valuation fields when available,
-charge status, and flagged discrepancies. List failures verbatim at the end;
-do not fabricate replacements.
+Free scoring supports exactly one property per user request. Reject requests to
+score a list, uploaded file, CSV/XLSX data, table, SOV, portfolio, or book. Do
+not process bulk input through repeated or parallel `score_address` calls, and
+do not split it into single-address free requests. Ask the user to choose one
+property or use PerilScore's authenticated SOV/bulk workflow with available
+report capacity. Never auto-run `build_underwriting_report` or create a charge
+as a fallback.
+For separately requested premium batch work, check credits, disclose the maximum
+possible charge, obtain explicit batch approval, and use one stable idempotency
+key per row. Summarize each address's result and charge status, and report
+failures without fabricating replacements.
 
 ## Protected read tools
 
