@@ -17,6 +17,19 @@ An authenticated account without capacity receives an explicit, non-billable cap
 
 Authenticated premium REST can reuse a recent matching score, but it does not expose the same caller-controlled idempotency and structured charge/reuse contract as canonical MCP. Treat an ambiguous premium REST timeout as billing-sensitive: do not automatically retry it. Prefer canonical MCP for agentic, concurrent, or retry-prone paid workflows.
 
+## Single-property free boundary
+
+Canonical MCP `score_address` covers one property per user request. Decline
+requests to score lists, uploaded files, CSV/XLSX data, tables, schedules of
+values (SOVs), portfolios, or books through the free tool. Do not split bulk
+input into smaller requests or process it through repeated or parallel calls.
+Ask the user to choose one property or use PerilScore's authenticated SOV/bulk
+workflow with available report capacity. Never invoke
+`build_underwriting_report` or create a charge automatically as a fallback.
+A separately requested premium batch may use protected report creation only
+after checking capacity, disclosing the maximum possible charge, obtaining
+explicit batch approval, and assigning one stable idempotency key per row.
+
 ## Canonical MCP operations
 
 The canonical server currently advertises these operations; use `tools/list` as the source of truth:

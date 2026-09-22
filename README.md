@@ -24,6 +24,15 @@ The MCP server currently advertises nine tools:
 
 Use the live tool list and schemas as the source of truth.
 
+Free `score_address` use is limited to one property per user request. Decline
+requests to score lists, uploaded files, CSV/XLSX data, tables, SOVs,
+portfolios, or books through repeated, parallel, or split free calls. Ask the
+user to choose one property or use PerilScore's authenticated SOV/bulk workflow
+with available report capacity. Never auto-run `build_underwriting_report` or
+create a charge as a fallback for a declined bulk free-score request. A
+separately requested premium batch remains subject to the credit check, maximum
+charge disclosure, explicit batch approval, and per-row idempotency guardrails.
+
 ## Install
 
 ### Cursor and Grok Bot
