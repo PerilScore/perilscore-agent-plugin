@@ -36,7 +36,8 @@ The canonical server currently advertises these operations; use `tools/list` as 
 
 - `score_address`: public, free, read-only, and always non-billable.
 - `build_underwriting_report`: protected premium creation; requires a stable idempotency key and may consume one credit.
-- `get_score`, `list_scores`: read owned score data and history.
+- `get_score`, `list_scores`: read owned score data and history. `get_score` defaults to a compact overview; request supported `sections` for detailed evidence.
+- `retry_report_enrichment`: explicitly request recovery of missing property records on an already-paid owned report; requires `score:write`, may update report evidence, and consumes no additional score credit. Refresh progress with `get_score` on the same public ID; respect terminal report states.
 - `get_share_score_url`: return the owned web sharing workflow; it does not send email.
 - `get_report_pdf_url`: return an authenticated PDF URL for an owned score.
 - `get_account_credits`: return capacity, plan, and billing status.

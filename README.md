@@ -13,11 +13,13 @@ cost, permits, reports, and account workflows for US properties.
 - Native Cursor and Grok plugin manifests
 - No hooks, executable scripts, downloaded binaries, or post-install code
 
-The MCP server currently advertises nine tools:
+The MCP server currently advertises ten tools:
 
 - `score_address` is public, read-only, and always free.
 - `build_underwriting_report` is protected and can consume one credit for a
   fresh premium report. It requires explicit paid intent and an idempotency key.
+- `retry_report_enrichment` is protected recovery for an already-paid owned
+  report. It can update stored evidence but never consumes another score credit.
 - `get_score`, `list_scores`, `get_share_score_url`, `get_report_pdf_url`,
   `get_account_credits`, `export_score_factors`, and `get_acord_url` are
   protected account/report tools.
@@ -49,6 +51,39 @@ git clone https://github.com/PerilScore/perilscore-agent-plugin.git \
   ~/.cursor/plugins/local/perilscore
 ```
 
+Local plugin installation verifies the Cursor desktop package. It does not
+publish a listing or install the plugin into the Grok Bot cloud service.
+
+#### Connect an account for premium tools
+
+In Grok Bot, open **Connect apps**, select PerilScore, and choose
+**Authenticate** when prompted. Sign in to PerilScore using your email and the
+six-digit code or sign-in link. Review the requested access, then connect the
+account to return to Grok Bot. An existing PerilScore session can go directly
+to consent. No API key or client secret is needed for this customer flow.
+
+Grok Bot uses Cursor's hosted OAuth callback. The plugin requests permission
+to read saved reports, create premium reports and request recovery, and read
+account capacity. OAuth tokens are held by the host; do not paste them into a
+conversation. Connecting does not create a report or consume a score credit.
+
+Ask for `get_account_credits` to check capacity, then explicitly request a
+premium report. A fresh `build_underwriting_report` may use one credit;
+identical retries use the same idempotency key. Use `get_score` and the returned
+public ID to read the report without another credit. Its default is a compact
+overview; request `sections` for detailed evidence. Use
+`retry_report_enrichment` only for an explicit recovery request on an
+already-paid report with missing property records.
+
+Free `score_address` is available without an account at the server. The host
+may offer authentication during installation or when a protected tool is used.
+If a connection is interrupted, choose **Reconnect** or **Reopen** in the
+host, complete sign-in, and retry the same logical request. Never start a new
+premium request merely to test whether authentication succeeded.
+
+See [Cursor's connection guide](https://cursor.com/help/grok-bot/connect-plugins)
+and [MCP OAuth reference](https://cursor.com/docs/mcp).
+
 ### Grok Build
 
 Install from the official xAI plugin marketplace when the listing is approved,
@@ -62,6 +97,10 @@ Grok Build uses `.mcp.json` and the public OAuth client
 `perilscore-grok-mcp`. It binds a random `127.0.0.1` loopback port and completes
 S256 PKCE without a client secret.
 
+The Grok manifest references `.mcp.json`; it does not duplicate the server
+configuration inline. The separate Cursor `mcp.json` is intentional because
+the hosts use different configuration fields and registered OAuth clients.
+
 ### Grok on the web
 
 Open [Grok connectors](https://grok.com/connectors), choose **New Connector →
@@ -71,15 +110,15 @@ Custom**, and enter `https://app.perilscore.com/mcp`.
 
 Free, non-billable lookup:
 
-> Use PerilScore's free score_address tool for 100 Main St, Miami, FL 33131.
+> Use PerilScore's free score_address tool for 350 5th Ave, New York, NY 10118.
 > Summarize the highest natural-peril scores, Fire Protection Score (lower is
 > better), important factors, crime context, and unavailable data. Do not build
 > a premium report.
 
 Premium report:
 
-> Build a premium PerilScore underwriting report for 100 Main St, Miami, FL
-> 33131 using idempotency key miami-main-review-001. I understand that a fresh
+> Build a premium PerilScore underwriting report for [FULL US ADDRESS]
+> using a new stable idempotency key for this request. I understand that a fresh
 > report may consume one credit. Report whether a credit was charged or a recent
 > result was reused, then summarize COPE, RCV assumptions, permits, significant
 > factors, missing data, and fields requiring professional verification.
@@ -137,6 +176,9 @@ Live contracts:
 - [MCP manifest](https://app.perilscore.com/.well-known/mcp.json)
 - [Developer documentation](https://app.perilscore.com/developers/)
 - [LLM discovery](https://app.perilscore.com/llms.txt)
+
+For marketplace submissions and remote MCP Registry metadata, see
+[docs/marketplace-submission.md](docs/marketplace-submission.md).
 
 ## Support and security
 
