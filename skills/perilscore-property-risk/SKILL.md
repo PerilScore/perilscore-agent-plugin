@@ -121,6 +121,21 @@ possible charge, obtain explicit batch approval, and use one stable idempotency
 key per row. Summarize each address's result and charge status, and report
 failures without fabricating replacements.
 
+## Retrieve and recover an existing premium report
+
+Use `get_score` with the premium `public_id` to retrieve an existing report
+without a credit charge. The default is a compact overview; request the live
+schema's `sections` for property, COPE, perils, replacement cost, permits,
+imagery, underwriting, or provenance details. Treat permit cursors as opaque.
+
+Use bounded refresh only while `report_status.terminal` is false. A terminal
+partial report has finished with missing evidence; repeated reads do not repair
+it. Use `retry_report_enrichment` only when the user explicitly requests recovery
+of missing property records on an already-paid owned report. This requires
+`score:write`, may update report evidence and derived estimates, and never
+consumes another score credit. Retrieve progress with `get_score` using the
+same public ID. Do not build a second premium report to repair the first.
+
 ## Protected read tools
 
 Use the minimum tool needed:

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.PerilScore/perilscore",
+  "title": "PerilScore",
+  "description": "US property risk scores and premium underwriting reports via PerilScore's hosted MCP server.",
+  "version": "1.0.0",
+  "repository": {
+    "url": "https://github.com/PerilScore/perilscore-agent-plugin",
+    "source": "github"
+  },
+  "websiteUrl": "https://app.perilscore.com/developers/",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://app.perilscore.com/mcp"
+    }
+  ]
+}
