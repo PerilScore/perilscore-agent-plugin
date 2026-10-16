@@ -39,7 +39,8 @@ charge disclosure, explicit batch approval, and per-row idempotency guardrails.
 
 ### Cursor and Grok Bot
 
-Install **PerilScore** from Cursor Marketplace. Cursor and Grok Bot use the
+Once approved, install **PerilScore** from the host's marketplace/Connect apps.
+Cursor and Grok Bot use the
 plugin's `mcp.json` and the public OAuth client `perilscore-cursor-mcp`.
 Authentication uses Authorization Code with S256 PKCE and no client secret.
 
@@ -53,6 +54,8 @@ git clone https://github.com/PerilScore/perilscore-agent-plugin.git \
 
 Local plugin installation verifies the Cursor desktop package. It does not
 publish a listing or install the plugin into the Grok Bot cloud service.
+Publisher applications for Grok Bot and Cursor use the
+[xAI submission form](https://x.ai/bot/marketplace/submit-a-plugin).
 
 #### Connect an account for premium tools
 

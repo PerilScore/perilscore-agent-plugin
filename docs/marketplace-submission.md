@@ -1,16 +1,30 @@
 # Marketplace submission and reviewer verification
 
 The public plugin package and the hosted MCP service have separate releases.
-Plugin version 1.0.1 updates configuration and guidance; the hosted MCP server
+Plugin version 1.0.2 updates submission guidance; the hosted MCP server
 currently identifies itself as 1.0.0. `server.json` describes that remote
 service, not an executable server shipped in this repository.
 
 ## Cursor Marketplace and Grok Bot
 
 Submit this official public repository at
-https://cursor.com/marketplace/publish. This is the Grok Bot listing route.
-If a submission is already pending, follow up on that submission rather than
-creating a duplicate. Supply the exact repository URL and tested commit.
+https://x.ai/bot/marketplace/submit-a-plugin. The form accepts a public plugin
+repository or hosted MCP URL and offers Grok Bot, Cursor, and Grok marked
+“coming soon.” Prefer the repository to include the skills and OAuth config;
+include `https://app.perilscore.com/mcp` in Testing Instructions. Reference any
+previous Cursor application and ask for the records to be linked. There is no
+documented automatic migration of pending Cursor applications.
+
+Use PerilScore's GitHub identity and `info@perilscore.com`. Recommended handle:
+`perilscore`; website: `https://perilscore.com`. The existing
+`assets/logo.png` is a 512×512 PNG with an opaque white background, matching
+the form's square/background-plate requirement. Its public URL is
+`https://raw.githubusercontent.com/PerilScore/perilscore-agent-plugin/main/assets/logo.png`.
+
+Do not check the local/in-app testing attestation until both have been
+performed on the actual release. Submit only after reviewing the current
+Publisher Terms linked by the form. Connector installation is free; explicitly
+disclose that fresh premium reports use existing PerilScore account credits.
 
 The package's `mcp.json` uses the public static client
 `perilscore-cursor-mcp`, no client secret, and S256 PKCE. The server registers
@@ -76,6 +90,15 @@ host test.
 Provide reviewer sign-in instructions through the platform's private review
 channel. Muse's dedicated reviewer password account is specific to Muse;
 never reuse its identity or credentials for another marketplace.
+
+Grok uses a separately provisioned reviewer identity at
+`https://app.perilscore.com/auth/reviewer/grok/` once enabled by the operator.
+This password sign-in returns to ordinary OAuth consent; it is not an OAuth
+client secret or an authorization bypass. The account starts empty with a
+bounded report-credit budget and automatic refill disabled. Verify actual
+deployment, provisioning, login, balance, and callback before claiming the
+review account is ready. Supply its password only in the platform's private
+reviewer channel, never in this repository or a public PR.
 
 ## Official MCP Registry
 
